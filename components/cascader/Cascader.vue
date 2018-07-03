@@ -15,10 +15,11 @@
 
 <script>
   import MaxZIndex from '../../mixins/zIndex'
+  import ClosestElement from '../../mixins/closestElement'
 
   export default {
     name: 'zp-cascader',
-    mixins: [MaxZIndex],
+    mixins: [MaxZIndex, ClosestElement],
     props: ['casOption'],
     data () {
       return {
@@ -93,25 +94,6 @@
             }
           }
         }
-      },
-      getClosest (el, selector) { // 获取最近的元素
-        let matchesFn
-        let parentEl
-        ['matches', 'webkitMatchesSelector', 'mozMatchesSelector', 'msMatchesSelector', 'oMatchesSelector'].some(fn => {
-          if (typeof document.body[fn] === 'function') {
-            matchesFn = fn
-            return true
-          }
-          return false
-        })
-        while (el) {
-          parentEl = el.parentElement
-          if (parentEl && parentEl[matchesFn](selector)) {
-            return parentEl
-          }
-          el = parentEl
-        }
-        return null
       },
       hidePrevSub (item) { // 隐藏之前显示子项
         const level = parseInt(item.getAttribute('data-level'), 10)

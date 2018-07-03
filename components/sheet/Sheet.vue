@@ -11,10 +11,11 @@
 
 <script>
 import MaxZIndex from '../../mixins/zIndex'
+import ClosestElement from '../../mixins/closestElement'
 
 export default {
   name: 'zp-sheet',
-  mixins: [MaxZIndex],
+  mixins: [MaxZIndex, ClosestElement],
   props: {
     visible: Boolean,
     placement: {
@@ -27,7 +28,7 @@ export default {
       this.$emit('update:visible', false)
     },
     checkClose (evt) {
-      !evt.target.classList.contains('zp-sheet-wrapper') && this.closeSheet()
+      !this.getClosest(evt.target, '.zp-sheet-wrapper') && this.closeSheet()
     }
   }
 }

@@ -114,7 +114,7 @@
           const childId = self.getAttribute('data-child')
           const selfPos = self.getBoundingClientRect()
           const ddlSelf = this.$refs.ddlSelf
-          const zIndex = this.ddlOption.zIndex ? parseInt(this.ddlOption.zIndex, 10) + 1 : 1000
+          const zIndex = (this.ddlOption.zIndex ? parseInt(this.ddlOption.zIndex, 10) : this.zIndex) + 1
           const curIndex = this.getElementIndex(self) // 当前索引
           const ddlWrap = this.$refs.ddlWrap
           let ddlSub
@@ -330,13 +330,33 @@
   color: #fff!important;
 }
 .zp-ddl .zp-ddl-arrow {
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAOCAYAAAASVl2WAAAAAXNSR0IArs4c6QAAAK1JREFUGBljYCAFGNl4poEwsh5GGMfM3sPyz1+GAyA+CzODw6mDO46D2GAFxrbukkDm2f///wNpIIuR8TkDw3/js4d3PmcMDQ1lu/vi8wGG//8tQZJwwMh4XFmC14GZQ0huGlB1AFwCwZB9/+WXOIJLMxajkY3HTKAbUPyOsI1xFpOyJG8u0F9gPyMkgCyQL4ByBMOBCaQLFCDMTAzBQG2/QBjEBomhmAjiYIsLACjQPAdNibz2AAAAAElFTkSuQmCC') no-repeat;
+  /* background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAOCAYAAAASVl2WAAAAAXNSR0IArs4c6QAAAK1JREFUGBljYCAFGNl4poEwsh5GGMfM3sPyz1+GAyA+CzODw6mDO46D2GAFxrbukkDm2f///wNpIIuR8TkDw3/js4d3PmcMDQ1lu/vi8wGG//8tQZJwwMh4XFmC14GZQ0huGlB1AFwCwZB9/+WXOIJLMxajkY3HTKAbUPyOsI1xFpOyJG8u0F9gPyMkgCyQL4ByBMOBCaQLFCDMTAzBQG2/QBjEBomhmAjiYIsLACjQPAdNibz2AAAAAElFTkSuQmCC') no-repeat; */
   position: absolute;
   pointer-events: none;
   width: 16px;
   height: 16px;
   right: 0;
   top: 5px;
+}
+.zp-ddl .zp-ddl-arrow:before {
+  position: absolute;
+  content: '';
+  top: 1px;
+  width: 0; 
+  height: 0; 
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 5px solid #323c47;
+}
+.zp-ddl .zp-ddl-arrow:after {
+  position: absolute;
+  content: '';
+  top: 9px;
+  width: 0; 
+  height: 0; 
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid #323c47;
 }
 .zp-ddl-items,
 .zp-ddl-sub {

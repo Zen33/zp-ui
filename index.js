@@ -23,6 +23,7 @@ import { Carousel, CarouselItem } from './components/carousel/'
 import Breadcrumb from './components/breadcrumb/'
 import Upload from './components/upload/'
 import Sheet from './components/sheet/'
+import Rate from './components/rate/'
 
 const components = [
   Collapse,
@@ -49,7 +50,8 @@ const components = [
   CarouselItem,
   Breadcrumb,
   Upload,
-  Sheet
+  Sheet,
+  Rate
 ]
 
 const install = Vue => {
@@ -100,5 +102,6 @@ export {
   Message,
   Information,
   Upload,
-  Sheet
+  Sheet,
+  Rate
 }

@@ -37,12 +37,13 @@
   import ZpCheckbox from '../checkbox/'
   import Cookie from '../../mixins/cookie'
   import ScrollbarWidth from '../../mixins/scrollbarWidth'
+  import ClosestElement from '../../mixins/closestElement'
   const resizeEvent = require('../../utils/resize')
 
   export default {
     name: 'zp-table',
     props: ['tableOption'],
-    mixins: [Cookie, ScrollbarWidth],
+    mixins: [Cookie, ScrollbarWidth, ClosestElement],
     data () {
       return {
         autosize: this.tableOption.autosize || true,
@@ -141,25 +142,6 @@
           this.$emit('scroll-action', evt)
         })
         this.autosize && resizeEvent.addResizeListener(this.$el, this.updateLayout)
-      },
-      getClosest (el, selector) { // 获取最近的元素
-        let matchesFn
-        let parentEl
-        ['matches', 'webkitMatchesSelector', 'mozMatchesSelector', 'msMatchesSelector', 'oMatchesSelector'].some(fn => {
-          if (typeof document.body[fn] === 'function') {
-            matchesFn = fn
-            return true
-          }
-          return false
-        })
-        while (el) {
-          parentEl = el.parentElement
-          if (parentEl && parentEl[matchesFn](selector)) {
-            return parentEl
-          }
-          el = parentEl
-        }
-        return null
       },
       updateLayout () { // 调整布局
         this.adjustCol()

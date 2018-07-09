@@ -21,9 +21,11 @@ import Message from './components/message/'
 import Information from './components/information/'
 import { Carousel, CarouselItem } from './components/carousel/'
 import Breadcrumb from './components/breadcrumb/'
+import { Dashboard, DashboardItem } from './components/dashboard/'
 import Upload from './components/upload/'
 import Sheet from './components/sheet/'
 import Rate from './components/rate/'
+import { LoaderService, Loader, LoaderDirective } from './components/loader/'
 
 const components = [
   Collapse,
@@ -49,6 +51,8 @@ const components = [
   Carousel,
   CarouselItem,
   Breadcrumb,
+  Dashboard,
+  DashboardItem,
   Upload,
   Sheet,
   Rate
@@ -59,11 +63,13 @@ const install = Vue => {
     Vue.component(component.name, component)
   })
   Vue.directive(Watermark.name, WatermarkDirective)
+  Vue.directive(Loader.name, LoaderDirective)
   
   Vue.prototype.$alert = DialogBox.alert
   Vue.prototype.$confirm = DialogBox.confirm
   Vue.prototype.$message = Message
   Vue.prototype.$info = Information
+  Vue.prototype.$loader = LoaderService
 }
 
 window.Vue && install(window.Vue)
@@ -91,7 +97,6 @@ export {
   Dialog,
   DialogBox,
   Watermark,
-  WatermarkDirective,
   Slider,
   Tooltip,
   Popover,
@@ -101,7 +106,10 @@ export {
   Breadcrumb,
   Message,
   Information,
+  Dashboard,
+  DashboardItem,
   Upload,
   Sheet,
-  Rate
+  Rate,
+  Loader
 }

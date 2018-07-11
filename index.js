@@ -26,6 +26,7 @@ import Upload from './components/upload/'
 import Sheet from './components/sheet/'
 import Rate from './components/rate/'
 import { LoaderService, Loader, LoaderDirective } from './components/loader/'
+import Steps from './components/steps/'
 
 const components = [
   Collapse,
@@ -55,7 +56,8 @@ const components = [
   DashboardItem,
   Upload,
   Sheet,
-  Rate
+  Rate,
+  Steps
 ]
 
 const install = Vue => {
@@ -111,5 +113,6 @@ export {
   Upload,
   Sheet,
   Rate,
-  Loader
+  Loader,
+  Steps
 }

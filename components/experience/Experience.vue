@@ -1,16 +1,16 @@
 <!-- Experience -->
 <template>  
-  <div class="zp-exp" ref="expSelf">
+  <div class="zp-exp">
     <div class="zp-exp-wrap">
       <div class="zp-exp-bar">
         <div class="zp-exp-bg" :style="{background: bgColor, width: `${100 / expLen}%`}" v-for="(stage, index) in expLen">
           <span class="zp-exp-per" :style="{background: ftColor, width: percent[index]}"></span>
         </div>
       </div>
-      <div class="zp-exp-stage" :style="{left: getLeft(index, expLen)}" v-for="(stage, index) in expOption.data">
-        <span class="zp-exp-point" :style="{left: getLeft(index, expLen), background: point[index]}"></span>
-        <span class="zp-exp-val" :style="{left: ready && getLeft(index, expLen, 'zp-exp-val')}">{{ stage.value }}</span>
-        <span class="zp-exp-key" :style="{left: ready && getLeft(index, expLen, 'zp-exp-key')}">{{ stage.name }}</span>
+      <div class="zp-exp-stage" :style="{left: getLeft(index)}" v-for="(stage, index) in expOption.data">
+        <span class="zp-exp-point" :style="{left: getLeft(index), background: point[index]}"></span>
+        <span class="zp-exp-val" :style="{left: ready && getLeft(index, 'zp-exp-val')}">{{ stage.value }}</span>
+        <span class="zp-exp-key" :style="{left: ready && getLeft(index, 'zp-exp-key')}">{{ stage.name }}</span>
       </div>
     </div>
   </div>
@@ -22,45 +22,45 @@
     props: ['expOption'],
     data () {
       const TEMP_LEN = this.expOption.data.length || 0
+      const TEMP_FT_COLOR = this.expOption.ftColor || '#4da1ff'
+      const TEMP_BG_COLOR = this.expOption.bgColor || '#ebebeb'
       return {
         ready: false,
-        ftColor: this.expOption.ftColor || '#4da1ff',
-        bgColor: this.expOption.bgColor || '#ebebeb',
+        ftColor: TEMP_FT_COLOR,
+        bgColor: TEMP_BG_COLOR,
         expLen: TEMP_LEN - 1, // 层级段数量
         curStage: 0, // 当前层级
         score: parseInt(this.expOption.score, 10) || 0, // 积分
-        point: (() => {
-          let pt = []
-          for (let i = 0, len = TEMP_LEN; i < len; i++) {
-            pt.push(this.expOption.bgColor || '#ebebeb')
+        point: ((i, len) => {
+          const pt = []
+          for (; i < len; i++) {
+            pt.push(TEMP_BG_COLOR)
           }
           return pt
-        })(),
-        percent: (() => {
-          let per = []
-          for (let i = 0, len = TEMP_LEN - 1; i < len; i++) {
+        })(0, TEMP_LEN),
+        percent: ((i, len) => {
+          const per = []
+          for (; i < len; i++) {
             per.push(0)
           }
           return per
-        })()
+        })(0, TEMP_LEN - 1)
       }
     },
     created () {
-      if (this.score > 0) {
-        this.updateScore(this.score)
-      }
+      this.score> 0 && this.updateScore(this.score)
     },
     mounted () {
       this.ready = true
     },
     methods: {
-      getLeft (index, len, klass) { // 获取位置
-        if (klass && this.$refs && this.$refs.expSelf) {
-          const exp = [...this.$refs.expSelf.querySelectorAll(`.${klass}`)]
+      getLeft (index, klass) { // 获取位置
+        if (klass && this.$el) {
+          const exp = [...this.$el.querySelectorAll(`.${klass}`)]
           const item = exp[index].getBoundingClientRect()
           exp[index].textContent.length > 1 && (exp[index].style.marginLeft = `-${item.width / 2}px`)
         }
-        return `${index * 100 / len}%`
+        return `${index * 100 / this.expLen}%`
       },
       updateScore (val) { // 更新分数
         this.score = val
@@ -106,7 +106,7 @@
     watch: {
       'expOption.score': {
         handler (val) {
-          val && this.updateScore(val)
+          this.updateScore(val)
         }
       }
     }

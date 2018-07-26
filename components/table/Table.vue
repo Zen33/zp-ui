@@ -34,7 +34,7 @@
 
 <script>
   import Vue from 'vue'
-  import ZpCheckbox from '../checkbox/'
+  import { Checkbox } from '../checkbox/'
   import Cookie from '../../mixins/cookie'
   import ScrollbarWidth from '../../mixins/scrollbarWidth'
   import ClosestElement from '../../mixins/closestElement'
@@ -73,7 +73,7 @@
       }
     },
     components: {
-      ZpCheckbox
+      Checkbox
     },
     mounted () {
       const tableStyles = window.getComputedStyle(this.$refs.tableSelf, null)

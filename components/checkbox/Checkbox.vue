@@ -98,10 +98,10 @@
     height: 12px;
     border: 1px solid #bdbdbd;
     border-radius: 3px;
-    -moz-transition: border-color .2s ease-in-out, background-color .2s ease-in-out, box-shadow .2s ease-in-out;
-    -webkit-transition: border-color .2s ease-in-out, background-color .2s ease-in-out, box-shadow .2s ease-in-out;
-    -o-transition: border-color .2s ease-in-out, background-color .2s ease-in-out, box-shadow .2s ease-in-out;
-    transition: border-color .2s ease-in-out, background-color .2s ease-in-out, box-shadow .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    -webkit-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
   }
   .zp-checkbox-checked .zp-checkbox {
     border-color: #4da1ff;
@@ -122,10 +122,6 @@
     -webkit-transform: rotate(45deg) scale(1);
     -o-transform: rotate(45deg) scale(1);
     transform: rotate(45deg) scale(1);
-    -moz-transition: all .2s ease-in-out;
-    -webkit-transition: all .2s ease-in-out;
-    -o-transition: all .2s ease-in-out;
-    transition: all .2s ease-in-out;
   }
   .zp-checkbox-focus .zp-checkbox {
     border-color: #4da1ff;

@@ -21,7 +21,6 @@ import Message from './components/message/'
 import Information from './components/information/'
 import { Carousel, CarouselItem } from './components/carousel/'
 import Breadcrumb from './components/breadcrumb/'
-import { Dashboard, DashboardItem } from './components/dashboard/'
 import Upload from './components/upload/'
 import Sheet from './components/sheet/'
 import Rate from './components/rate/'
@@ -52,8 +51,6 @@ const components = [
   Carousel,
   CarouselItem,
   Breadcrumb,
-  Dashboard,
-  DashboardItem,
   Upload,
   Sheet,
   Rate,
@@ -108,8 +105,6 @@ export {
   Breadcrumb,
   Message,
   Information,
-  Dashboard,
-  DashboardItem,
   Upload,
   Sheet,
   Rate,

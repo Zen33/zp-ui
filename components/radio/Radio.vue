@@ -84,6 +84,18 @@
   }
   .zp-radio-checked .zp-radio {
     border-color: #4da1ff;
+    background: #4da1ff;
+  }
+  .zp-radio-checked .zp-radio:before {
+    content: '';
+    display: table;
+    width: 12px;
+    height: 12px;
+    position: absolute;
+    border-top: 0;
+    border-left: 0;
+    border-radius: 6px;
+    background-color: #fff;
   }
   .zp-radio-checked .zp-radio:after {
     content: '';
@@ -95,12 +107,8 @@
     left: 2px;
     border-top: 0;
     border-left: 0;
-    -moz-transition: all .2s ease-in-out;
-    -webkit-transition: all .2s ease-in-out;
-    -o-transition: all .2s ease-in-out;
-    transition: all .2s ease-in-out;
     border-radius: 6px;
-    background-color: #2d8cf0;
+    background-color: #4da1ff;
   }
   .zp-radio-focus .zp-radio {
     border-color: #4da1ff;

@@ -7,7 +7,7 @@
     </slot>
     <div :class="['zp-ddl-wrapper', `zp-ddl-${uid}`, {'zp-ddl-hide': !expand}]" ref="ddlWrap" :style="{'z-index': ddlOption.zIndex || zIndex}">
       <ul ref="ddlItems" data-level="0" :class="['zp-ddl-items', {'zp-ddl-ref': slot}, {'zp-ddl-non-ref': !slot}]" :style="{width: `${ddlOption.width}px`}" @mouseenter="ddlVisible = true;ddlSubVisible = true" @mouseleave="onBlur(false)">
-        <li v-for="item in ddlOption.data" @click="setSelected(item)" @mouseenter="beforeCheckSub($event, item)" :class="[{'zp-ddl-selected': getItem(item) === model && !slot}, 'zp-ddl-item']">
+        <li v-for="(item, i) in ddlOption.data" @click="setSelected(item)" @mouseenter="beforeCheckSub($event, item)" :class="[{'zp-ddl-selected': getItem(item) === model && !slot}, 'zp-ddl-item']" :key="i">
           <a :class="{'zp-ddl-sub-arrow': item[subKey]}"><i v-if="item.itemClass" :class="item.itemClass"/>{{ getItem(item) }}</a>
         </li>
     </ul>

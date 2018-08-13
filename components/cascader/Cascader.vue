@@ -5,7 +5,7 @@
     <i class="zp-cas-arrow"></i>
     <div :class="['zp-cas-wrapper', `zp-cas-${uid}`, {'zp-cas-hide': !expand}]" ref="casWrap" :style="{'z-index': casOption.zIndex || zIndex}">
       <ul ref="casItems" data-level="0" class="zp-cas-items" :style="{'max-width': `${casOption.width}px`}" @mouseenter="casVisible = true;casSubVisible = true" @mouseleave="onBlur(false)">
-        <li v-for="item in casOption.data" @click="setSelected($event, item)" @mouseenter="beforeCheckSub($event, item)" :class="[{'zp-cas-selected': `${item.value}` === `${oriValue[0]}`}, 'zp-cas-item']">
+        <li v-for="(item, i) in casOption.data" @click="setSelected($event, item)" @mouseenter="beforeCheckSub($event, item)" :class="[{'zp-cas-selected': `${item.value}` === `${oriValue[0]}`}, 'zp-cas-item']" :key="i">
           <a :class="{'zp-cas-sub-arrow': item[subKey]}"><i v-if="item.itemClass" :class="item.itemClass"/>{{ item.label }}</a>
         </li>
       </ul>

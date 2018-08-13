@@ -2,7 +2,7 @@
 <template>
   <div class="zp-rate-wrapper">
     <div class="zp-rate">
-      <span v-for="(rate, index) in max" :key="rate" :class="[{'zp-rate-hover': curIndex === index}, rateClass(rate, index)]" :style="rateStyle(rate, index)" @mousemove="setValue(rate, index, $event)" @mouseleave="resetValue" @click="setValue(rate)"></span>
+      <span v-for="(rate, index) in max" :key="index" :class="[{'zp-rate-hover': curIndex === index}, rateClass(rate, index)]" :style="rateStyle(rate, index)" @mousemove="setValue(rate, index, $event)" @mouseleave="resetValue" @click="setValue(rate)"></span>
       <span v-if="showText" class="zp-rate-text">{{ curText }}</span>
     </div>
   </div>

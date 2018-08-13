@@ -23,7 +23,8 @@ export const domStyle = (el, props, val) => {
     return props
   }
   const context = (el.ownerDocument || document)['defaultView']
-  if (!context.hasOwnProperty('getComputedStyle')) {
+  // if (!context.hasOwnProperty('getComputedStyle')) {
+  if (typeof context.getComputedStyle !== 'function') {
     context.getComputedStyle = (el, pseudo) => {
       return {
         el,

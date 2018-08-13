@@ -1,7 +1,7 @@
 <!-- Slider -->
 <template>
   <div :class="['zp-slider-wrap', {'zp-slider-vertical': isVertical, 'zp-slider-disabled': disabled}]" ref="sliderSelf">
-    <div class="zp-slider-stop" :style="stopStyle(stop)" v-if="showStops" v-for="stop in stops"></div>
+    <div class="zp-slider-stop" :style="stopStyle(stop)" v-if="showStops" v-for="(stop, i) in stops" :key="i"></div>
     <div class="zp-slider" :style="sliderStyle" ref="zpSlider" @mouseenter="handleTooltip" @mouseleave="handleTooltip(false)" @mousedown="handleSliderStart" @touchstart="handleSliderStart"></div>
     <div class="zp-slider-handler" :style="minStyle" @mousedown="handleSliderStart($event, 'min')" @touchstart="handleSliderStart($event, 'min')" ref="minHandler">
       <zp-tooltip :content="getModel('min')" :disabled="tipDisabled" :keep="curType === 'min'" ref="minTip">

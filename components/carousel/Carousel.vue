@@ -10,7 +10,7 @@
         <span v-if="hasArrow && visible" class="zp-cal-arrow zp-cal-arrow-right" @click.stop="handleArrowClick(curIndex + 1)"></span>
       </transition>
       <ul v-if="items.length" class="zp-cal-indicators">
-        <li v-for="(item, index) in items" @mouseenter="hancleIndicatorHover(index)" :class="['zp-cal-indicator', {'zp-cal-indicator-label': item.label}, {'zp-cal-indicator-active': index === curIndex}]">
+        <li v-for="(item, index) in items" @mouseenter="hancleIndicatorHover(index)" :class="['zp-cal-indicator', {'zp-cal-indicator-label': item.label}, {'zp-cal-indicator-active': index === curIndex}]" :key="index">
           {{ item.label }}
         </li>
       </ul>

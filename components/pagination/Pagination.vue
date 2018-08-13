@@ -8,7 +8,7 @@
       <li :class="['zp-pg-prev', {'zp-pg-disabled': curPage === 1}]" rel="0"></li><!--
       --><li :class="['zp-pg-num', {'zp-pg-selected': curPage === 1}]" v-if="pageCount > 0">1</li><!--
       --><li :class="['zp-pg-omit-prev', omitPrevClass]" v-if="showOmitPrev" @mouseenter="omitPrevClass = 'zp-pg-arrow-left'" @mouseleave="omitPrevClass = 'zp-pg-omit'"></li><!--
-      --><li v-for="page in pages" :class="['zp-pg-num', {'zp-pg-selected': curPage === page}]">{{ page }}</li><!--
+      --><li v-for="(page, i) in pages" :class="['zp-pg-num', {'zp-pg-selected': curPage === page}]" :key="i">{{ page }}</li><!--
       --><li :class="['zp-pg-omit-next', omitNextClass]" v-if="showOmitNext" @mouseenter="omitNextClass = 'zp-pg-arrow-right'" @mouseleave="omitNextClass = 'zp-pg-omit'"></li><!--
       --><li :class="['zp-pg-num', {'zp-pg-selected': curPage === pageCount}]" v-if="pageCount > 1">{{ pageCount}}</li><!--
       --><li :class="['zp-pg-next', {'zp-pg-disabled': curPage === pageCount}]" rel="1"></li>

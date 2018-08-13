@@ -3,9 +3,9 @@
   <div :class="['zp-steps', {'zp-steps-vertical': isVertical, 'zp-steps-place-right': position === 'right'}]">
     <div class="zp-steps-wrap">
       <div class="zp-steps-bar">
-        <div class="zp-steps-bg" :style="getStepStyle(step, index)" v-for="(step, index) in steps - 1"></div>
+        <div class="zp-steps-bg" :style="getStepStyle(step, index)" v-for="(step, index) in steps - 1" :key="index"></div>
       </div>
-      <div class="zp-steps-step" :style="{top: isVertical && getTop(index), left: !isVertical && getLeft(index)}" v-for="(step, index) in stepsOption.data">
+      <div class="zp-steps-step" :style="{top: isVertical && getTop(index), left: !isVertical && getLeft(index)}" v-for="(step, index) in stepsOption.data" :key="index">
         <span :class="['zp-steps-point', {'zp-steps-check': index < curStep}]" :style="{backgroundColor: index < curStep ? ftColor : null, top: isVertical && getTop(index), left: !isVertical && getLeft(index), color: point[index], borderColor: point[index]}">{{ index < curStep ? '' : index + 1 }}</span>
         <span :class="`zp-steps-${position}`" :style="{top: isVertical && getTop(index), left: ready && !isVertical && getLeft(index, `zp-steps-${position}`), color: point[index]}">{{ step }}</span>
       </div>

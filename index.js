@@ -26,6 +26,8 @@ import Sheet from './components/sheet/'
 import Rate from './components/rate/'
 import { LoaderService, Loader, LoaderDirective } from './components/loader/'
 import Steps from './components/steps/'
+import Card from './components/card/'
+import Tree from './components/tree/'
 
 const components = [
   Collapse,
@@ -54,7 +56,9 @@ const components = [
   Upload,
   Sheet,
   Rate,
-  Steps
+  Steps,
+  Card,
+  Tree
 ]
 
 const install = Vue => {
@@ -109,5 +113,7 @@ export {
   Sheet,
   Rate,
   Loader,
-  Steps
+  Steps,
+  Card,
+  Tree
 }

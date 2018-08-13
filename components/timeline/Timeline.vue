@@ -2,7 +2,7 @@
 <template>
   <div ref="tlSelf" class="zp-tl-wrapper">
     <ul class="zp-tl">
-      <li v-for="item in tlOption.data" class="zp-tl-item">
+      <li v-for="(item, i) in tlOption.data" class="zp-tl-item" :key="i">
         <div class="zp-tl-line" :style="{'border-left': `2px ${item.lineType} ${item.lineColor}`}"></div>
         <div class="zp-tl-dot" :style="{'border-color': item.dotBorderColor, 'background-color': item.dotBgColor, 'border-radius': (item.dotShape === 'square' ? '0' : '50%')}">
           <i class="zp-tl-dot-core" :style="{'border-radius': (item.dotShape === 'square' ? '0' : '50%'), 'background-color': item.dotColor}"></i>

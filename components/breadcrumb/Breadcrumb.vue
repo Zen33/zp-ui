@@ -1,7 +1,7 @@
 <!-- Breadcrumb -->
 <template>
   <div class="zp-crumb-wrapper">
-    <div v-for="(item, index) in crumbOption.data" class="zp-crumb-item">
+    <div v-for="(item, index) in crumbOption.data" class="zp-crumb-item" :key="index">
       <span :class="['zp-crumb-item-title', {'zp-crumb-item-clickable': !item.nonclickable}, item.customClass]" @click="handleAction(item, index)">{{ item.value || item }}</span>
       <span v-if="index !== crumbOption.data.length - 1" :class="['zp-crumb-item-separator', {'zp-crumb-item-arrow': !item.separator}]" v-html="item.separator"></span>
     </div>

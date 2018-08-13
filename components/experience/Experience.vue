@@ -3,11 +3,11 @@
   <div class="zp-exp">
     <div class="zp-exp-wrap">
       <div class="zp-exp-bar">
-        <div class="zp-exp-bg" :style="{background: bgColor, width: `${100 / expLen}%`}" v-for="(stage, index) in expLen">
+        <div class="zp-exp-bg" :style="{background: bgColor, width: `${100 / expLen}%`}" v-for="(stage, index) in expLen" :key="index">
           <span class="zp-exp-per" :style="{background: ftColor, width: percent[index]}"></span>
         </div>
       </div>
-      <div class="zp-exp-stage" :style="{left: getLeft(index)}" v-for="(stage, index) in expOption.data">
+      <div class="zp-exp-stage" :style="{left: getLeft(index)}" v-for="(stage, index) in expOption.data" :key="index">
         <span class="zp-exp-point" :style="{left: getLeft(index), background: point[index]}"></span>
         <span class="zp-exp-val" :style="{left: ready && getLeft(index, 'zp-exp-val')}">{{ stage.value }}</span>
         <span class="zp-exp-key" :style="{left: ready && getLeft(index, 'zp-exp-key')}">{{ stage.name }}</span>

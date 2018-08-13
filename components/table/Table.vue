@@ -298,7 +298,7 @@
             const uid = Math.random().toString(36).substr(2, 9)
             renderFn[index] && (this.cellVms[uid] = new Vue({
               el: cell,
-              render: h => {
+              render (h) {
                 return renderFn[index].render.call(this, h, data[renderFn[index].index], uid)
               },
               created () {
@@ -526,7 +526,7 @@
           this.checkAll = !!this.checkable
           new Vue({
             el: curHead.querySelector('.zp-ck-all'),
-            render: h => { // render中无v-model --///
+            render (h) { // render中无v-model --///
               /* https://cn.vuejs.org/v2/guide/render-function.html#v-model
               render 函数中没有与 v-model 相应的 api - 你必须自己来实现相应的逻辑,
               这就是深入底层要付出的，尽管麻烦了一些，但相对于 v-model 来说，你可以更灵活地控制。*/
@@ -548,7 +548,7 @@
             this.allCks[index] = !!this.checkable
             new Vue({
               el: ck,
-              render: h => { // render中无v-model --///
+              render (h) { // render中无v-model --///
                 /* https://cn.vuejs.org/v2/guide/render-function.html#v-model
                 render 函数中没有与 v-model 相应的 api - 你必须自己来实现相应的逻辑,
                 这就是深入底层要付出的，尽管麻烦了一些，但相对于 v-model 来说，你可以更灵活地控制。*/

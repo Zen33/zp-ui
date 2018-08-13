@@ -38,6 +38,9 @@
   }
   .zp-loader-mask {
     position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: rgba(255, 255, 255, .9);
     top: 0;
     right: 0;
@@ -56,15 +59,8 @@
     left: 0;
   }
   .zp-loader-hint {
-    position: relative;
     width: 100px;
     min-height: 31px;
-    top: 50.1%;
-    left: 50%;
-    -moz-transform: translate3d(-50%, calc(-50% + 0.5px), 0);
-    -webkit-transform: translate3d(-50%, calc(-50% + 0.5px), 0);
-    -o-transform: translate3d(-50%, calc(-50% + 0.5px), 0);
-    transform: translate3d(-50%, calc(-50% + 0.5px), 0);
   }
   .zp-loader-spinner {
     height: 30px;
@@ -79,6 +75,9 @@
     border-radius: 50%;
     border: 2px solid #ccc;
     border-top-color: #54a5ff;
+    -moz-animation: spin .6s linear infinite;
+    -webkit-animation: spin .6s linear infinite;
+    -o-animation: spin .6s linear infinite;
     animation: spin .6s linear infinite;
   }
   @-moz-keyframes spin {

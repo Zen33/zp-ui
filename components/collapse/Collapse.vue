@@ -17,19 +17,24 @@
     </div>
     <div class="zp-col-item">
       <slot name="colAlways"><!-- 一直显示区域 --></slot>
-      <transition name="zp-col-fade">
+      <collapse-transition>
         <div v-show="expand">
           <slot name="colSwitch"><!-- 折叠区域 --></slot>
         </div>
-      </transition>
+      </collapse-transition>
     </div>
   </div>
 </template>
 
 <script>
+  import CollapseTransition from '../common/collapseTransition'
+
   export default {
     name: 'zp-collapse',
     props: ['colOption'],
+    components: {
+      CollapseTransition
+    },
     data () {
       return {
         expand: this.colOption.expand || false,
@@ -102,7 +107,7 @@
     -o-transform: rotate(-180deg);
     transform: rotate(-180deg);
   }
-  .zp-col .zp-col-fade-enter-active,
+  /* .zp-col .zp-col-fade-enter-active,
   .zp-col .zp-col-fade-leave-active {
     -moz-transition: all 0.2s ease-in;
     -webkit-transition: all 0.2s ease-in;
@@ -112,5 +117,5 @@
   .zp-col .zp-col-fade-enter,
   .zp-col .zp-col-fade-leave-active {
     opacity: 0;
-  }
+  } */
 </style>

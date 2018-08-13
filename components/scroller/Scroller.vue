@@ -62,6 +62,7 @@
         const ref = this.$refs.scrollerWrap
         this.offsetX = ref.scrollLeft * 100 / ref.clientWidth
         this.offsetY = ref.scrollTop * 100 / ref.clientHeight
+        this.$emit('on-scroll', evt)
       },
       updateScrollbar () {
         const ref = this.$refs.scrollerWrap

@@ -6,16 +6,20 @@
       <i class="zp-ddl-arrow"></i>
     </slot>
     <div :class="['zp-ddl-wrapper', `zp-ddl-${uid}`, {'zp-ddl-hide': !expand}]" ref="ddlWrap" :style="{'z-index': ddlOption.zIndex || zIndex}">
-      <ul ref="ddlItems" data-level="0" :class="['zp-ddl-items', {'zp-ddl-ref': slot}, {'zp-ddl-non-ref': !slot}]" :style="{width: `${ddlOption.width}px`}" @mouseenter="ddlVisible = true;ddlSubVisible = true" @mouseleave="onBlur(false)">
-        <li v-for="(item, i) in ddlOption.data" @click="setSelected(item)" @mouseenter="beforeCheckSub($event, item)" :class="[{'zp-ddl-selected': getItem(item) === model && !slot}, 'zp-ddl-item']" :key="i">
-          <a :class="{'zp-ddl-sub-arrow': item[subKey]}"><i v-if="item.itemClass" :class="item.itemClass"/>{{ getItem(item) }}</a>
-        </li>
-    </ul>
+      <div ref="ddlItems" data-level="0" :class="['zp-ddl-items', {'zp-ddl-ref': slot}, {'zp-ddl-non-ref': !slot}]" :style="{width: `${ddlOption.width}px`}" @mouseenter="ddlVisible = true;ddlSubVisible = true" @mouseleave="onBlur(false)">
+        <zp-scroller ref="zpScroller">
+          <span v-for="(item, i) in ddlOption.data" @click="setSelected(item)" @mouseenter="beforeCheckSub($event, item)" :class="[{'zp-ddl-selected': getItem(item) === model && !slot}, 'zp-ddl-item']" :key="i">
+            <a :class="{'zp-ddl-sub-arrow': item[subKey]}"><i v-if="item.itemClass" :class="item.itemClass"/>{{ getItem(item) }}</a>
+          </span>
+        </zp-scroller>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+  import Vue from 'vue'
+  import ZpScroller from '../scroller'
   import MaxZIndex from '../../mixins/zIndex'
 
   export default {
@@ -36,8 +40,13 @@
         ddlVisible: false,
         ddlSubVisible: true,
         subKey: this.ddlOption.hasChild || 'children',
-        model: ''
+        model: '',
+        maxHeight: this.ddlOption.maxHeight || 206,
+        subItems: {}
       }
+    },
+    components: {
+      ZpScroller
     },
     created () {
       if (this.ddlOption.url) {
@@ -86,6 +95,18 @@
       }
     },
     methods: {
+      adjustScroller (id) {
+        const scroller = id ? this.subItems[id].$refs[`zpScroller${id}`] : this.$refs.zpScroller
+        const $el = scroller.$el
+        if ($el.offsetHeight > this.maxHeight) {
+          $el.classList.add('zp-ddl-scroller')
+        } else {
+          if ($el.classList.contains('zp-ddl-scroller')) {
+            $el.classList.remove('zp-ddl-scroller')
+          }
+        }
+        scroller.updateScrollbar()
+      },
       hidePrevSub (item) { // 隐藏之前显示子项
         const level = parseInt(item.getAttribute('data-level'), 10)
         const ddlSubItems = [...document.querySelectorAll(`.${this.seed}:not([style*="display:none"]):not([style*="display: none"]`)]
@@ -131,15 +152,23 @@
             ddlSub.style.display = 'inline-block'
           } else {
             const id = `child-${new Date().getTime()}`
-            let ddlString = `<ul id="${id}" data-level="${level}" class="zp-ddl-sub ${this.seed}" style="top: ${selfPos.top + window.scrollY}px;left: ${selfPos.left + selfPos.width + window.scrollX}px;z-index: ${zIndex};">`
-            for (let item of data[this.subKey]) {
-              const hasSubClass = item[this.subKey] ? ' zp-ddl-sub-arrow' : ''
-              const hasSelectedClass = `${selectedVal}` === `${item.value}` ? ' zp-ddl-selected' : ''
-              ddlString += `<li class="zp-ddl-item${hasSubClass}${hasSelectedClass}" data-value="${item.value}"><a>${item.label}</a></li>`
-            }
+            let ddlString = `<div id="${id}" data-level="${level}" class="zp-ddl-sub ${this.seed}" style="top: ${selfPos.top + window.scrollY}px;left: ${selfPos.left + selfPos.width + window.scrollX}px;z-index: ${zIndex};"><div class="tmp"></div></div>`
             this.$refs.ddlWrap.insertAdjacentHTML('beforeend', ddlString)
-            const ddlSub = document.querySelector(`#${id}`)
-            const items = [...document.querySelectorAll(`#${id} li`)]
+            const subKey = this.subKey
+            ddlSub = document.querySelector(`#${id}`)
+            this.subItems[id] = new Vue({
+              el: ddlSub.querySelector('.tmp'),
+              render (h) {
+                return (
+                  <zp-scroller ref={`zpScroller${id}`}>{
+                    data[subKey].map(item => {
+                      return <span class={{'zp-ddl-item': true, 'zp-ddl-sub-arrow': item[subKey], 'zp-ddl-selected': selectedVal === item.value}} data-value={item.value}><a>{item.label}</a></span>
+                    })
+                  }</zp-scroller>
+                )
+              }
+            })
+            const items = [...document.querySelectorAll(`#${id} span`)]
             level += 1
             ddlSub.addEventListener('mouseenter', () => {
               this.ddlVisible = true
@@ -163,6 +192,7 @@
               }, 300)
             })
             self.setAttribute('data-child', id)
+            this.$nextTick(this.adjustScroller(id))
           }
         }
       },
@@ -251,6 +281,7 @@
         }
         this.expand && this.$nextTick(() => {
           this.adjustPos(this.$refs.ddlWrap)
+          this.adjustScroller()
         })
       },
       onBlur (status) { // 隐藏当前项
@@ -388,28 +419,29 @@
 .zp-ddl-non-ref {
   max-height: 208px;
 }
-.zp-ddl-items li,
-.zp-ddl-sub li {
+.zp-ddl-items span,
+.zp-ddl-sub span {
   line-height: 25px;
   height: 25px;
   text-indent: 5px;
   position: relative;
+  display: block;
 }
-.zp-ddl-items li:hover,
-.zp-ddl-sub li:hover {
+.zp-ddl-items span:hover,
+.zp-ddl-sub span:hover {
   cursor: pointer;
   background: #e6e8ea;
 }
-.zp-ddl-items li:hover a,
-.zp-ddl-sub li:hover a {
+.zp-ddl-items span:hover a,
+.zp-ddl-sub span:hover a {
   color: #323c47;
 }
-.zp-ddl-items li,
-.zp-ddl-sub li {
+.zp-ddl-items span,
+.zp-ddl-sub span {
   border-bottom: 1px solid #eceef3;
 }
-.zp-ddl-items li:last-child,
-.zp-ddl-sub li:last-child {
+.zp-ddl-items span:last-child,
+.zp-ddl-sub span:last-child {
   border-bottom: none;
 }
 .zp-ddl-sub a,
@@ -437,5 +469,9 @@
 }
 ::-ms-clear {
   display: none;
+}
+.zp-ddl-scroller {
+  position: relative;
+  height: 206px;
 }
 </style>

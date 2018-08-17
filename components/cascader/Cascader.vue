@@ -4,16 +4,20 @@
     <input type="text" v-model="model" readonly :style="{width: `${casOption.width}px`}" @click="toggleList" @blur="onBlur" @mouseleave="onBlur" ref="casInput"/>
     <i class="zp-cas-arrow"></i>
     <div :class="['zp-cas-wrapper', `zp-cas-${uid}`, {'zp-cas-hide': !expand}]" ref="casWrap" :style="{'z-index': casOption.zIndex || zIndex}">
-      <ul ref="casItems" data-level="0" class="zp-cas-items" :style="{'max-width': `${casOption.width}px`}" @mouseenter="casVisible = true;casSubVisible = true" @mouseleave="onBlur(false)">
-        <li v-for="(item, i) in casOption.data" @click="setSelected($event, item)" @mouseenter="beforeCheckSub($event, item)" :class="[{'zp-cas-selected': `${item.value}` === `${oriValue[0]}`}, 'zp-cas-item']" :key="i">
-          <a :class="{'zp-cas-sub-arrow': item[subKey]}"><i v-if="item.itemClass" :class="item.itemClass"/>{{ item.label }}</a>
-        </li>
-      </ul>
+      <div ref="casItems" data-level="0" class="zp-cas-items" :style="{'max-width': `${casOption.width}px`}" @mouseenter="casVisible = true;casSubVisible = true" @mouseleave="onBlur(false)">
+        <zp-scroller class="zp-cas-scroller">
+          <span v-for="(item, i) in casOption.data" @click="setSelected($event, item)" @mouseenter="beforeCheckSub($event, item)" :class="[{'zp-cas-selected': `${item.value}` === `${oriValue[0]}`}, 'zp-cas-item']" :key="i">
+            <a :class="{'zp-cas-sub-arrow': item[subKey]}"><i v-if="item.itemClass" :class="item.itemClass"/>{{ item.label }}</a>
+          </span>
+        </zp-scroller>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+  import Vue from 'vue'
+  import ZpScroller from '../scroller'
   import MaxZIndex from '../../mixins/zIndex'
   import ClosestElement from '../../mixins/closestElement'
 
@@ -38,8 +42,12 @@
         shadow: {
           value: [],
           label: []
-        }
+        },
+        subItems: {}
       }
+    },
+    components: {
+      ZpScroller
     },
     created () {
       if (this.casOption.url) {
@@ -182,15 +190,23 @@
             casSub.style.display = 'inline-block'
           } else {
             const id = `child-${new Date().getTime()}`
-            let casString = `<ul id="${id}" data-index="${curIndex}" data-level="${level}" class="zp-cas-sub ${this.seed}" style="z-index: ${zIndex};">`
-            for (let item of data[this.subKey]) {
-              const hasSubClass = item[this.subKey] ? ' zp-cas-sub-arrow' : ''
-              const hasSelectedClass = `${selectedVal}` === `${item.value}` ? ' zp-cas-selected' : ''
-              casString += `<li class="zp-cas-item${hasSubClass}${hasSelectedClass}" data-value="${item.value}"><a>${item.label}</a></li>`
-            }
+            let casString = `<div id="${id}" data-index="${curIndex}" data-level="${level}" class="zp-cas-sub ${this.seed}" style="z-index: ${zIndex};"><div class="tmp"></div></div>`
             this.$refs.casWrap.insertAdjacentHTML('beforeend', casString)
+            const subKey = this.subKey
             casSub = document.querySelector(`#${id}`)
-            const items = [...document.querySelectorAll(`#${id} li`)]
+            this.subItems[id] = new Vue({
+              el: casSub.querySelector('.tmp'),
+              render (h) {
+                return (
+                  <zp-scroller class="zp-cas-scroller">{
+                    data[subKey].map(item => {
+                      return <span class={{'zp-cas-item': true, 'zp-cas-sub-arrow': item[subKey], 'zp-cas-selected': selectedVal === item.value}} data-value={item.value}><a>{item.label}</a></span>
+                    })
+                  }</zp-scroller>
+                )
+              }
+            })
+            const items = [...document.querySelectorAll(`#${id} span`)]
             level += 1
             casSub.addEventListener('mouseenter', () => {
               this.casVisible = true
@@ -391,28 +407,29 @@
   margin-top: -1px;
   margin-left: -5px;
 } */
-.zp-cas-items li,
-.zp-cas-sub li {
+.zp-cas-items span,
+.zp-cas-sub span {
   line-height: 25px;
   height: 25px;
   text-indent: 5px;
   position: relative;
+  display: block;
 }
-.zp-cas-items li:hover,
-.zp-cas-sub li:hover {
+.zp-cas-items span:hover,
+.zp-cas-sub span:hover {
   cursor: pointer;
   background: #e6e8ea;
 }
-.zp-cas-items li:hover a,
-.zp-cas-sub li:hover a {
+.zp-cas-items span:hover a,
+.zp-cas-sub span:hover a {
   color: #323c47;
 }
-.zp-cas-items li,
-.zp-cas-sub li {
+.zp-cas-items span,
+.zp-cas-sub span {
   border-bottom: 1px solid #eceef3;
 }
-.zp-cas-items li:last-child,
-.zp-cas-sub li:last-child {
+.zp-cas-items span:last-child,
+.zp-cas-sub span:last-child {
   border-bottom: none;
 }
 .zp-cas-sub a,
@@ -440,5 +457,9 @@
 }
 ::-ms-clear {
   display: none;
+}
+.zp-cas-scroller {
+  position: relative;
+  height: 206px;
 }
 </style>

@@ -35,6 +35,7 @@
 <script>
   import Vue from 'vue'
   import { Checkbox } from '../checkbox/'
+  import ZpScroller from '../scroller'
   import Cookie from '../../mixins/cookie'
   import ScrollbarWidth from '../../mixins/scrollbarWidth'
   import ClosestElement from '../../mixins/closestElement'
@@ -73,7 +74,8 @@
       }
     },
     components: {
-      Checkbox
+      Checkbox,
+      ZpScroller
     },
     mounted () {
       const tableStyles = window.getComputedStyle(this.$refs.tableSelf, null)
@@ -843,7 +845,6 @@
     right: 0;
     bottom: 0;
     width: 5px;
-    background: red;
     overflow: hidden;
   }
   .zp-drag-line {

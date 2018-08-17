@@ -231,7 +231,7 @@
   }
   .zp-tabs-top .zp-tabs-pane-wrapper,
   .zp-tabs-bottom .zp-tabs-pane-wrapper {
-    min-height: 164px;
+    min-height: 154px;
   }
   .zp-tabs .zp-tabs-nav-scrollable {
     padding: 0 20px;

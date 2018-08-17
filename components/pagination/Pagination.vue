@@ -1,4 +1,4 @@
-<!-- 分页 -->
+<!-- Pagination -->
 <template>
   <div class="zp-pg-wrap">
     <template v-if="pageSizes.length">

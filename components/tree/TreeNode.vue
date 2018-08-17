@@ -149,7 +149,13 @@
             }
           }
         }
-        walk(context)
+        try {
+          walk(context)
+        } catch (e) {
+          setTimeout(() => {
+            walk(context)
+          }, 0)
+        }
       },
       handleParentCheckChange (context, val, deep = true) { // 设置父节点checkbox
         const childKey = this.props.childKey

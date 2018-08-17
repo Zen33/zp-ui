@@ -1,4 +1,4 @@
-<!-- Dynamic numbers -->
+<!-- Dynamic Numbers -->
 <template>
   <span class="zp-dn" v-text="num" :style="anStyle" />
 </template>

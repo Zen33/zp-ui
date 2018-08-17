@@ -1,3 +1,4 @@
+<!-- Upload -->
 <template>
   <div :class="['zp-upload', {'zp-upload-in-scope': inScope}]" @click="$refs.uploader.click()" @drop.prevent="handleDrop" @dragover.prevent="draggable && (inScope = true)" @dragleave.prevent="inScope = false">
     <input type="file" class="zp-uploader" @change="handleChange" :multiple="multiple" :accept="accept" ref="uploader" />

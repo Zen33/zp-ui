@@ -28,6 +28,8 @@ import { LoaderService, Loader, LoaderDirective } from './components/loader/'
 import Steps from './components/steps/'
 import Card from './components/card/'
 import Tree from './components/tree/'
+import Tag from './components/tag/'
+import { Tabs, TabPane } from './components/tabs/'
 
 const components = [
   Collapse,
@@ -58,7 +60,10 @@ const components = [
   Rate,
   Steps,
   Card,
-  Tree
+  Tree,
+  Tag,
+  Tabs,
+  TabPane
 ]
 
 const install = Vue => {
@@ -115,5 +120,8 @@ export {
   Loader,
   Steps,
   Card,
-  Tree
+  Tree,
+  Tag,
+  Tabs,
+  TabPane
 }

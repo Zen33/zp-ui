@@ -5,14 +5,16 @@
       <input type="text" v-model="model" :readonly="!ddlOption.editable" :style="{width: `${ddlOption.width}px`}" @click="toggleList" @blur="onBlur" @mouseleave="onBlur" @keyup="getRes" ref="ddlInput"/>
       <i class="zp-ddl-arrow"></i>
     </slot>
-    <div :class="['zp-ddl-wrapper', `zp-ddl-${uid}`, {'zp-ddl-hide': !expand}]" ref="ddlWrap" :style="{'z-index': ddlOption.zIndex || zIndex}">
-      <div ref="ddlItems" data-level="0" :class="['zp-ddl-items', {'zp-ddl-ref': slot}, {'zp-ddl-non-ref': !slot}]" :style="{width: `${ddlOption.width}px`}" @mouseenter="ddlVisible = true;ddlSubVisible = true" @mouseleave="onBlur(false)">
-        <zp-scroller ref="zpScroller">
-          <span v-for="(item, i) in ddlOption.data" @click="setSelected(item)" @mouseenter="beforeCheckSub($event, item)" :class="[{'zp-ddl-selected': getItem(item) === model && !slot}, 'zp-ddl-item']" :key="i">
-            <a :class="{'zp-ddl-sub-arrow': item[subKey]}"><i v-if="item.itemClass" :class="item.itemClass"/>{{ getItem(item) }}</a>
-          </span>
-        </zp-scroller>
-      </div>
+    <div :class="['zp-ddl-wrapper', `zp-ddl-${uid}`]" ref="ddlWrap" :style="{'z-index': ddlOption.zIndex || zIndex}">
+      <transition :name="`zp-${position}`">
+        <div v-show="expand" ref="ddlItems" data-level="0" :class="['zp-ddl-items', {'zp-ddl-ref': slot}, {'zp-ddl-non-ref': !slot}]" :style="{width: `${ddlOption.width}px`}" @mouseenter="ddlVisible = true;ddlSubVisible = true" @mouseleave="onBlur(false)">
+          <zp-scroller ref="zpScroller">
+            <span v-for="(item, i) in ddlOption.data" @click="setSelected(item)" @mouseenter="beforeCheckSub($event, item)" :class="[{'zp-ddl-selected': getItem(item) === model && !slot}, 'zp-ddl-item']" :key="i">
+              <a :class="{'zp-ddl-sub-arrow': item[subKey]}"><i v-if="item.itemClass" :class="item.itemClass"/>{{ getItem(item) }}</a>
+            </span>
+          </zp-scroller>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -42,7 +44,8 @@
         subKey: this.ddlOption.hasChild || 'children',
         model: '',
         maxHeight: this.ddlOption.maxHeight || 206,
-        subItems: {}
+        subItems: {},
+        position: 'top'
       }
     },
     components: {
@@ -153,7 +156,7 @@
           } else {
             const id = `child-${new Date().getTime()}`
             let ddlString = `<div id="${id}" data-level="${level}" class="zp-ddl-sub ${this.seed}" style="top: ${selfPos.top + window.scrollY}px;left: ${selfPos.left + selfPos.width + window.scrollX}px;z-index: ${zIndex};"><div class="tmp"></div></div>`
-            this.$refs.ddlWrap.insertAdjacentHTML('beforeend', ddlString)
+            ddlWrap.insertAdjacentHTML('beforeend', ddlString)
             const subKey = this.subKey
             ddlSub = document.querySelector(`#${id}`)
             this.subItems[id] = new Vue({
@@ -168,8 +171,9 @@
                 )
               }
             })
-            const items = [...document.querySelectorAll(`#${id} span`)]
+            const items = [...document.querySelectorAll(`#${id} .zp-ddl-item`)]
             level += 1
+            ddlWrap.style.width = `${items[0].offsetWidth * level * 2}px`
             ddlSub.addEventListener('mouseenter', () => {
               this.ddlVisible = true
               this.ddlSubVisible = true
@@ -251,7 +255,7 @@
         this.ddlSubVisible = false
         this.hideSub()
         this.toggleList()
-        this.ddlOption.onSelect && this.ddlOption.onSelect.call(this, curVal)
+        this.ddlOption.onSelect && this.ddlOption.onSelect.call(this, curVal, this.model)
         this.$emit('ddl-action', curVal)
       },
       adjustPos (item) { // 纠正位置
@@ -264,16 +268,26 @@
           const itemMaxHeight = itemRect.height + ddlRect.top
           if (itemMaxHeight >= modalMaxHeight) {
             item.style.top = `-${itemRect.height}px`
+            this.position = 'bottom'
+          } else {
+            this.position = 'top'
           }
         } else {
           const itemMaxHeight = itemRect.height + ddlRect.top + ddlRect.height
           if (itemMaxHeight >= window.innerHeight) {
             item.style.top = `${window.scrollY + ddlRect.top - itemRect.height}px`
+            this.position = 'bottom'
           } else {
             item.style.top = `${ddlRect.top + ddlRect.height + window.scrollY}px`
+            this.position = 'top'
           }
           item.style.left = `${ddlRect.left + window.scrollX}px`
         }
+        this.expand = false
+        setTimeout(() => {
+          this.expand = true
+          this.adjustScroller()
+        }, 0)
       },
       toggleList () { // 切换当前项
         if (this.ddlOption.data.length) {
@@ -281,7 +295,6 @@
         }
         this.expand && this.$nextTick(() => {
           this.adjustPos(this.$refs.ddlWrap)
-          this.adjustScroller()
         })
       },
       onBlur (status) { // 隐藏当前项
@@ -450,9 +463,6 @@
   color: #323c47;
   font-size: 14px;
 }
-.zp-ddl-hide {
-  display: none;
-}
 /* .zp-ddl:after {
   position: absolute;
   content: '';
@@ -473,5 +483,53 @@
 .zp-ddl-scroller {
   position: relative;
   height: 206px;
+}
+.zp-top-enter-active,
+.zp-top-leave-active {
+  opacity: 1;
+  -moz-transform: scaleY(1);
+  -webkit-transform: scaleY(1);
+  -o-transform: scaleY(1);
+  transform: scaleY(1);
+  -moz-transition: all .3s cubic-bezier(.23, 1, .32, 1);
+  -webkit-transition: all .3s cubic-bezier(.23, 1, .32, 1);
+  -o-transition: all .3s cubic-bezier(.23, 1, .32, 1);
+  transition: all .3s cubic-bezier(.23, 1, .32, 1);
+  -moz-transform-origin: center top;
+  -o-transform-origin: center top;
+  -webkit-transform-origin: center top;
+  transform-origin: center top;
+}
+.zp-top-enter,
+.zp-top-leave-active {
+  opacity: 0;
+  -moz-transform: scaleY(0);
+  -webkit-transform: scaleY(0);
+  -o-transform: scaleY(0);
+  transform: scaleY(0);
+}
+.zp-bottom-enter-active,
+.zp-bottom-leave-active {
+  opacity: 1;
+  -moz-transform: scaleY(1);
+  -webkit-transform: scaleY(1);
+  -o-transform: scaleY(1);
+  transform: scaleY(1);
+  -moz-transition: all .3s cubic-bezier(.23, 1, .32, 1);
+  -webkit-transition: all .3s cubic-bezier(.23, 1, .32, 1);
+  -o-transition: all .3s cubic-bezier(.23, 1, .32, 1);
+  transition: all .3s cubic-bezier(.23, 1, .32, 1);
+  -moz-transform-origin: center bottom;
+  -o-transform-origin: center bottom;
+  -webkit-transform-origin: center bottom;
+  transform-origin: center bottom;
+}
+.zp-bottom-enter,
+.zp-bottom-leave-active {
+  opacity: 0;
+  -moz-transform: scaleY(0);
+  -webkit-transform: scaleY(0);
+  -o-transform: scaleY(0);
+  transform: scaleY(0);
 }
 </style>

@@ -5,7 +5,7 @@ import { domStyle } from '../../utils/dom'
 const defaultOptions = {
   fullscreen: true,
   text: null,
-  mode: 'service', 
+  mode: 'service',
   target: document.body
 }
 const LoaderConstructor = Vue.extend(loaderModel)

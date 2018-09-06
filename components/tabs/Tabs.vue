@@ -20,8 +20,8 @@
 </template>
 
 <script>
-  const resizeEvent = require('../../utils/resize')
   import ZpTabIndicator from './TabIndicator.vue'
+  import resizeEvent from '../../utils/resize'
 
   export default {
     name: 'zp-tabs',

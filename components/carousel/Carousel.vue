@@ -19,8 +19,8 @@
 </template>
 
 <script>
-  const resizeEvent = require('../../utils/resize')
-  const throttleEvent = require('../../utils/throttle')
+  import resizeEvent from '../../utils/resize'
+  import throttleEvent from '../../utils/throttle'
 
   export default {
     name: 'zp-carousel',

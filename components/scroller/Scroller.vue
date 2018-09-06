@@ -8,8 +8,8 @@
         <slot></slot>
       </div>
     </div>
-    <scrollbar v-show="scrollX" :size="width" :leeway="offsetX" orientation="h"></scrollbar>
-    <scrollbar v-show="scrollY" :size="height" :leeway="offsetY"></scrollbar>
+    <scrollbar v-show="overflowX" :size="width" :offset="offsetX" orientation="h"></scrollbar>
+    <scrollbar v-show="overflowY" :size="height" :offset="offsetY"></scrollbar>
   </div>
 </template>
 
@@ -17,7 +17,7 @@
   import Scrollbar from './Scrollbar.vue'
   import ScrollbarWidth from '../../mixins/scrollbarWidth'
   import Prefix from '../../mixins/prefix'
-  const resizeEvent = require('../../utils/resize')
+  import resizeEvent from '../../utils/resize'
 
   export default {
     name: 'zp-scroller',
@@ -38,10 +38,8 @@
         height: 0,
         offsetX: 0,
         offsetY: 0,
-        scrollX: false,
-        scrollY: false,
-        observer: null,
-        curHeight: this.oriHeight
+        overflowX: false,
+        overflowY: false
       }
     },
     components: {
@@ -50,9 +48,9 @@
     computed: {
       wrapStyle () {
         const style = {}
-        if (this.scrollbarWidth) {
-          this.prefix.lowercase !== 'webkit' && (style.marginRight = style.marginBottom = `-${this.scrollbarWidth}px`)
-          style.height = this.curHeight && `${this.curHeight}px`
+        if (this.scrollbarWidth && this.prefix.lowercase !== 'webkit') {
+          style.marginRight = style.marginBottom = `-${this.scrollbarWidth}px`
+          style.height = this.oriHeight && `${this.oriHeight}px` || `${this.prefix.css}calc(100% + ${this.scrollbarWidth}px)`
         }
         return style
       }
@@ -67,8 +65,8 @@
       updateScrollbar () {
         const ref = this.$refs.scrollerWrap
         if (ref) {
-          this.scrollX = ref.scrollWidth > ref.offsetWidth
-          this.scrollY = ref.scrollHeight > ref.offsetHeight
+          this.overflowX = ref.scrollWidth > ref.offsetWidth
+          this.overflowY = ref.scrollHeight > ref.offsetHeight
           this.width = `${ref.clientWidth * 100 / ref.scrollWidth}%`
           this.height = `${ref.clientHeight * 100 / ref.scrollHeight}%`
         }

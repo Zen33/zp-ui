@@ -1,7 +1,7 @@
 <!-- Scrollbar -->
 <template>
   <div :class="['zp-scrollbar', `zp-scrollbar-${orientation}`]" @mousedown="clickScrollbar">
-    <div class="zp-scrollbar-indicator" @mousedown="clickIndicator" :style="indicatorStyle" ref="indicator">
+    <div class="zp-scrollbar-indicator" @mousedown.stop="clickIndicator" :style="indicatorStyle" ref="indicator">
     </div>
   </div>
 </template>
@@ -14,7 +14,7 @@
         type: String,
         default: 'v' // v: vertical, h: horizontal
       },
-      leeway: {
+      offset: {
         type: [String, Number]
       },
       size: [String, Number]
@@ -26,15 +26,7 @@
     },
     computed: {
       scrollbar () {
-        return (this.orientation === 'v' ? {
-          offset: 'offsetHeight',
-          scroll: 'scrollTop',
-          scrollSize: 'scrollHeight',
-          size: 'height',
-          axis: 'Y',
-          client: 'clientY',
-          direction: 'top'
-        } : {
+        return (this.orientation === 'h' ? {
           offset: 'offsetWidth',
           scroll: 'scrollLeft',
           scrollSize: 'scrollWidth',
@@ -42,11 +34,19 @@
           axis: 'X',
           client: 'clientX',
           direction: 'left'
+        } : {
+          offset: 'offsetHeight',
+          scroll: 'scrollTop',
+          scrollSize: 'scrollHeight',
+          size: 'height',
+          axis: 'Y',
+          client: 'clientY',
+          direction: 'top'
         })
       },
       indicatorStyle () {
         const style = {}
-        const translate = `translate${this.scrollbar.axis}(${Math.ceil(this.leeway)}%)`
+        const translate = `translate${this.scrollbar.axis}(${Math.ceil(this.offset)}%)`
         style[this.scrollbar.size] = this.size
         style.msTransform = translate
         style.oTransform = translate
@@ -65,7 +65,7 @@
       },
       clickIndicator (evt) {
         this.isScrolling = true
-        this[this.scrollbar.axis] = (evt.currentTarget[this.scrollbar.offset] - (evt[this.scrollbar.client] - evt.currentTarget.getBoundingClientRect()[this.scrollbar.direction]))
+        this[this.scrollbar.axis] = evt.currentTarget[this.scrollbar.offset] - evt[this.scrollbar.client] + evt.currentTarget.getBoundingClientRect()[this.scrollbar.direction]
         document.body.classList.add('zp-scroll-on')
         document.addEventListener('mousemove', this.handleIndicatorMove)
         document.addEventListener('mouseup', this.handleIndicatorEnd)
@@ -73,13 +73,14 @@
       setIndicator (evt) {
         const scroller = this.$parent.$refs.scrollerWrap
         const lastPos = this[this.scrollbar.axis]
-        if (lastPos) {
+        if (lastPos && this.isScrolling) {
           const offset = evt[this.scrollbar.client] - this.$el.getBoundingClientRect()[this.scrollbar.direction]
           const indicatorPosPer = (offset - (this.$refs.indicator[this.scrollbar.offset] - lastPos)) / this.$el[this.scrollbar.offset]
           scroller[this.scrollbar.scroll] = indicatorPosPer * scroller[this.scrollbar.scrollSize]
         }
       },
       handleIndicatorMove (evt) {
+        // evt.stopImmediatePropagation()
         this.isScrolling && this.setIndicator(evt)
       },
       handleIndicatorEnd (evt) {

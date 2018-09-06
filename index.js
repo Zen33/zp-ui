@@ -30,6 +30,7 @@ import Card from './components/card/'
 import Tree from './components/tree/'
 import Tag from './components/tag/'
 import { Tabs, TabPane } from './components/tabs/'
+import { DatePicker, Calendar, AlmanacPicker } from './components/datepicker/'
 
 const components = [
   Collapse,
@@ -63,7 +64,10 @@ const components = [
   Tree,
   Tag,
   Tabs,
-  TabPane
+  TabPane,
+  DatePicker,
+  Calendar,
+  AlmanacPicker
 ]
 
 const install = Vue => {
@@ -123,5 +127,8 @@ export {
   Tree,
   Tag,
   Tabs,
-  TabPane
+  TabPane,
+  DatePicker,
+  Calendar,
+  AlmanacPicker
 }

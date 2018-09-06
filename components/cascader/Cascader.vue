@@ -3,14 +3,18 @@
   <div class="zp-cas" ref="casSelf" @mousewheel="expand = false">
     <input type="text" v-model="model" readonly :style="{width: `${casOption.width}px`}" @click="toggleList" @blur="onBlur" @mouseleave="onBlur" ref="casInput"/>
     <i class="zp-cas-arrow"></i>
-    <div :class="['zp-cas-wrapper', `zp-cas-${uid}`, {'zp-cas-hide': !expand}]" ref="casWrap" :style="{'z-index': casOption.zIndex || zIndex}">
-      <div ref="casItems" data-level="0" class="zp-cas-items" :style="{'max-width': `${casOption.width}px`}" @mouseenter="casVisible = true;casSubVisible = true" @mouseleave="onBlur(false)">
-        <zp-scroller class="zp-cas-scroller">
-          <span v-for="(item, i) in casOption.data" @click="setSelected($event, item)" @mouseenter="beforeCheckSub($event, item)" :class="[{'zp-cas-selected': `${item.value}` === `${oriValue[0]}`}, 'zp-cas-item']" :key="i">
-            <a :class="{'zp-cas-sub-arrow': item[subKey]}"><i v-if="item.itemClass" :class="item.itemClass"/>{{ item.label }}</a>
-          </span>
-        </zp-scroller>
-      </div>
+    <div :class="['zp-cas-wrapper', `zp-cas-${uid}`]" ref="casWrap" :style="{'z-index': casOption.zIndex || zIndex}">
+      <transition :name="`zp-${position}`">
+        <div v-show="expand" class="zp-cas-container" ref="casContainer">
+          <div ref="casItems" data-level="0" class="zp-cas-list zp-cas-items" :style="{'max-width': `${casOption.width}px`}" @mouseenter="casVisible = true;casSubVisible = true" @mouseleave="onBlur(false)">
+            <zp-scroller class="zp-cas-scroller">
+              <span v-for="(item, i) in casOption.data" @click="setSelected($event, item)" @mouseenter="beforeCheckSub($event, item)" @mouseleave="highlightItem" :class="[{'zp-cas-selected': `${item.value}` === `${oriValue[0]}`}, 'zp-cas-item']" :key="i">
+                <a :class="{'zp-cas-sub-arrow': item[subKey]}"><i v-if="item.itemClass" :class="item.itemClass"/>{{ item.label }}</a>
+              </span>
+            </zp-scroller>
+          </div>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -43,7 +47,8 @@
           value: [],
           label: []
         },
-        subItems: {}
+        subItems: {},
+        position: 'top'
       }
     },
     components: {
@@ -85,6 +90,13 @@
       }
     },
     methods: {
+      highlightItem (evt) {
+        const target = evt.target
+        const itsRoot = this.getClosest(target, '.zp-cas-list')
+        const prevItem = itsRoot && itsRoot.querySelector('.zp-cas-highlight')
+        prevItem && prevItem.classList.remove('zp-cas-highlight')
+        target.classList.add('zp-cas-highlight')
+      },
       getProp (data, prop, val = true) {
         return data.hasOwnProperty(prop) ? data[prop] : val
       },
@@ -119,9 +131,10 @@
         this.hidePrevSub(this.$refs.casItems)
         let level = this.setModel(target, args[1])
         this.checkSub(...args, ++level, this.oriValue[level])
+        this.highlightItem(...args)
       },
       setModel (el, prop, update) { // 设置当前值
-        const itsRoot = this.getClosest(el, 'ul')
+        const itsRoot = this.getClosest(el, '.zp-cas-list')
         const level = itsRoot ? itsRoot.getAttribute('data-level') : null
         if (level !== null && prop) {
           const len = this.oriValue.length - 1
@@ -175,7 +188,6 @@
           const casSelf = this.$refs.casSelf
           const zIndex = this.casOption.zIndex ? parseInt(this.casOption.zIndex, 10) + 1 : 1000
           const curIndex = this.getElementIndex(self) // 当前索引
-          const casWrap = this.$refs.casWrap
           let casSub
           if (childId) {
             casSub = document.querySelector(`#${childId}`)
@@ -190,8 +202,8 @@
             casSub.style.display = 'inline-block'
           } else {
             const id = `child-${new Date().getTime()}`
-            let casString = `<div id="${id}" data-index="${curIndex}" data-level="${level}" class="zp-cas-sub ${this.seed}" style="z-index: ${zIndex};"><div class="tmp"></div></div>`
-            this.$refs.casWrap.insertAdjacentHTML('beforeend', casString)
+            let casString = `<div id="${id}" data-index="${curIndex}" data-level="${level}" class="zp-cas-list zp-cas-sub ${this.seed}" style="z-index: ${zIndex};"><div class="tmp"></div></div>`
+            this.$refs.casContainer.insertAdjacentHTML('beforeend', casString)
             const subKey = this.subKey
             casSub = document.querySelector(`#${id}`)
             this.subItems[id] = new Vue({
@@ -206,8 +218,9 @@
                 )
               }
             })
-            const items = [...document.querySelectorAll(`#${id} span`)]
+            const items = [...document.querySelectorAll(`#${id} .zp-cas-item`)]
             level += 1
+            this.$refs.casWrap.style.width = `${items[0].offsetWidth * level * 2}px`
             casSub.addEventListener('mouseenter', () => {
               this.casVisible = true
               this.casSubVisible = true
@@ -219,10 +232,12 @@
                 this.setModel(evt.currentTarget, data[this.subKey][index])
                 this.hidePrevSub(casSub)
                 this.checkSub(evt, data[this.subKey][index], level, this.oriValue[level])
+                this.highlightItem(evt)
               })
               item.addEventListener('click', evt => {
                 this.setSelected(evt, data[this.subKey][index])
               })
+              item.addEventListener('mouseleave', this.highlightItem)
             })
             casSub.addEventListener('mouseleave', evt => {
               this.onBlur(false)
@@ -282,7 +297,7 @@
         this.casSubVisible = false
         this.hideSub()
         this.toggleList()
-        this.casOption.onSelect && this.casOption.onSelect.call(this, data.value)
+        this.casOption.onSelect && this.casOption.onSelect.call(this, data.value, this.model)
         this.$emit('cas-action', data.value)
       },
       adjustPos (item) { // 纠正位置
@@ -295,16 +310,25 @@
           const itemMaxHeight = itemRect.height + casRect.top
           if (itemMaxHeight >= modalMaxHeight) {
             item.style.top = `-${itemRect.height}px`
+            this.position = 'bottom'
+          } else {
+            this.position = 'top'
           }
         } else {
           const itemMaxHeight = itemRect.height + casRect.top + casRect.height
           if (itemMaxHeight >= window.innerHeight) {
             item.style.top = `${window.scrollY + casRect.top - itemRect.height}px`
+            this.position = 'bottom'
           } else {
             item.style.top = `${casRect.top + casRect.height + window.scrollY}px`
+            this.position = 'top'
           }
           item.style.left = `${casRect.left + window.scrollX}px`
         }
+        this.expand = false
+        setTimeout(() => {
+          this.expand = true
+        }, 0)
       },
       toggleList () { // 切换当前项
         if (this.casOption.data.length) {
@@ -321,6 +345,9 @@
           if (!this.casVisible) {
             this.expand = false
             this.$emit('casInput:blur')
+            ;[...this.$refs.casContainer.querySelectorAll('.zp-cas-highlight')].forEach(item => {
+              item.classList.remove('zp-cas-highlight')
+            })
           }
         }, 300)
       }
@@ -416,7 +443,8 @@
   display: block;
 }
 .zp-cas-items span:hover,
-.zp-cas-sub span:hover {
+.zp-cas-sub span:hover,
+.zp-cas-highlight {
   cursor: pointer;
   background: #e6e8ea;
 }
@@ -461,5 +489,53 @@
 .zp-cas-scroller {
   position: relative;
   height: 206px;
+}
+.zp-top-enter-active,
+.zp-top-leave-active {
+  opacity: 1;
+  -moz-transform: scaleY(1);
+  -webkit-transform: scaleY(1);
+  -o-transform: scaleY(1);
+  transform: scaleY(1);
+  -moz-transition: all .3s cubic-bezier(.23, 1, .32, 1);
+  -webkit-transition: all .3s cubic-bezier(.23, 1, .32, 1);
+  -o-transition: all .3s cubic-bezier(.23, 1, .32, 1);
+  transition: all .3s cubic-bezier(.23, 1, .32, 1);
+  -moz-transform-origin: center top;
+  -o-transform-origin: center top;
+  -webkit-transform-origin: center top;
+  transform-origin: center top;
+}
+.zp-top-enter,
+.zp-top-leave-active {
+  opacity: 0;
+  -moz-transform: scaleY(0);
+  -webkit-transform: scaleY(0);
+  -o-transform: scaleY(0);
+  transform: scaleY(0);
+}
+.zp-bottom-enter-active,
+.zp-bottom-leave-active {
+  opacity: 1;
+  -moz-transform: scaleY(1);
+  -webkit-transform: scaleY(1);
+  -o-transform: scaleY(1);
+  transform: scaleY(1);
+  -moz-transition: all .3s cubic-bezier(.23, 1, .32, 1);
+  -webkit-transition: all .3s cubic-bezier(.23, 1, .32, 1);
+  -o-transition: all .3s cubic-bezier(.23, 1, .32, 1);
+  transition: all .3s cubic-bezier(.23, 1, .32, 1);
+  -moz-transform-origin: center bottom;
+  -o-transform-origin: center bottom;
+  -webkit-transform-origin: center bottom;
+  transform-origin: center bottom;
+}
+.zp-bottom-enter,
+.zp-bottom-leave-active {
+  opacity: 0;
+  -moz-transform: scaleY(0);
+  -webkit-transform: scaleY(0);
+  -o-transform: scaleY(0);
+  transform: scaleY(0);
 }
 </style>

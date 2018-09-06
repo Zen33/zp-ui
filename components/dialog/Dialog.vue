@@ -177,9 +177,9 @@ export default {
 .zp-dg-body {
   padding: 10px 0;
   overflow-y: auto;
-  height: -webkit-calc(100% - 30px);
-  height: -moz-calc(100% - 30px);
-  height: calc(100% - 30px);
+  height: -webkit-calc(100% - 65px);
+  height: -moz-calc(100% - 65px);
+  height: calc(100% - 65px);
 }
 .zp-dg-footer {
   text-align: right;

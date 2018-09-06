@@ -39,7 +39,7 @@
   import Cookie from '../../mixins/cookie'
   import ScrollbarWidth from '../../mixins/scrollbarWidth'
   import ClosestElement from '../../mixins/closestElement'
-  const resizeEvent = require('../../utils/resize')
+  import resizeEvent from '../../utils/resize'
 
   export default {
     name: 'zp-table',

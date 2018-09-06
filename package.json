@@ -1,6 +1,6 @@
 {
   "name": "zp-crm-ui",
-  "version": "0.3.3",
+  "version": "0.3.5",
   "description": "UI components built with Vue, by zhaopin.com CRM FE team.",
   "main": "",
   "keywords": [
@@ -10,12 +10,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Zen33/zp-crm-ui.git"
+    "url": "https://github.com/Zen33/zp-ui.git"
   },
   "bugs": {
-    "url": "https://github.com/Zen33/zp-crm-ui/issues"
+    "url": "https://github.com/Zen33/zp-ui/issues"
   },
-  "homepage": "http://7te.net",
+  "homepage": "http://7te.net/zp-ui",
   "author": "tangzhen@me.com",
   "license": "MIT",
   "dependencies": {

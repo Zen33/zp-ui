@@ -7,5 +7,29 @@ export default {
   },
   isNumber (n) { // 是否为数字
     return !isNaN(parseFloat(n)) && isFinite(n)
+  },
+  isDate (d) { // 是否为日期
+    if (d === null || d === undefined) {
+      return false
+    }
+    if (isNaN(new Date(d).getTime())) { 
+      return false
+    }
+    return true
+  },
+  getDotNotationVal (obj, prop, val) { // 获取形如a.b.c value
+    if (!prop) {
+      return obj
+    }
+    const props = prop.split('.')
+    const final = props.pop()
+    let key
+    while ((key = props.shift())) {
+      if (typeof obj[key] === 'undefined') {
+        return undefined
+      }
+      obj = obj[key]
+    }
+    return val ? (obj[final] = val) : obj[final]
   }
 }

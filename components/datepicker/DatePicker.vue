@@ -1,14 +1,14 @@
 <!-- Date Picker -->
 <template>
-  <div class="zp-dp" @mousewheel="expand = false" @click="toggleList" @blur="onBlur" @mouseleave="onBlur" ref="dpSelf">
+  <div :class="['zp-dp', {'zp-picker-disabled': disabled}]" @mousewheel="expand = false" @click="toggleList" @blur="onBlur" @mouseleave="onBlur" ref="dpSelf">
     <input type="text" v-if="type !== 'range'" v-model="model" readonly :placeholder="placeholder" />
     <div class="zp-dp-range" v-else>
       <input type="text" v-model="startDate" readonly :placeholder="startPlaceholder"/>
-      <span class="zp-almanac-select-range">{{ rangeSeparator }}</span>
+      <span class="zp-range-separator">{{ rangeSeparator }}</span>
       <input type="text" v-model="endDate" readonly :placeholder="endPlaceholder"/>
     </div>
     <i class="zp-icon-calendar"></i>
-    <i :class="['zp-icon-clear', {'zp-hide': !curDate}]" @click.stop="clearDate"></i>
+    <i v-if="clearable" :class="['zp-icon-clear', {'zp-hide': !curDate || !curDate.length || disabled}]" @click.stop="clearDate"></i>
     <div :class="['zp-date-wrapper', `zp-date-${uid}`]" ref="dpWrap" :style="wrapStyle">
       <transition :name="`zp-${position}`">
         <div v-show="expand" class="zp-date-items" @mouseenter="dpVisible = true" @mouseleave="onBlur(false)">
@@ -22,7 +22,6 @@
 </template>
 
 <script>
-  import ZpCalendar from './Calendar.vue'
   import MaxZIndex from '../../mixins/zIndex'
   import UID from '../../mixins/uid'
   import { formatDate } from './date'
@@ -53,7 +52,15 @@
         type: Function,
         default: () => {}
       },
-      withToday: Boolean
+      withToday: Boolean,
+      clearable: {
+        type: Boolean,
+        default: true
+      },
+      disabled: {
+        type: Boolean,
+        default: false
+      }
     },
     data () {
       return {
@@ -63,12 +70,9 @@
         startDate: '',
         endDate: '',
         curDate: this.value,
-        model: this.value ? formatDate(this.value) : '',
+        model: this.value ? formatDate(this.value, this.format) : '',
         curType: this.type
       }
-    },
-    components: {
-      ZpCalendar
     },
     computed: {
       wrapStyle () {
@@ -153,6 +157,9 @@
         }, 0)
       },
       toggleList () { // 切换当前项
+        if (this.disabled) {
+          return false
+        }
         this.expand = !this.expand
         this.expand && this.$nextTick(() => {
           this.adjustPos(this.$refs.dpWrap)
@@ -333,5 +340,16 @@
   }
   .zp-hide {
     display: none;
+  }
+  .zp-picker-disabled > *,
+  .zp-picker-disabled [type="text"] {
+    cursor: not-allowed!important;
+    color: #ccc!important;
+  }
+  .zp-picker-disabled:after {
+    filter: gray;
+    -webkit-filter: grayscale(1);
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
   }
 </style>

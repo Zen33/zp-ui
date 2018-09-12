@@ -11,6 +11,8 @@
         :endPlaceholder="endPlaceholder"
         :rangeSeparator="rangeSeparator"
         :bus="bus"
+        :disabled="disabled"
+        :clearable="clearable"
       />
     </div>
     <button class="prime" @click="addSelect">{{ addSelectText }}</button>
@@ -47,6 +49,14 @@
       addSelectText: {
         type: String,
         default: '+'
+      },
+      clearable: {
+        type: Boolean,
+        default: true
+      },
+      disabled: {
+        type: Boolean,
+        default: false
       }
     },
     data () {

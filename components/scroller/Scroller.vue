@@ -30,6 +30,10 @@
       nativeBar: {
         type: Boolean,
         default: false
+      },
+      noresize: {
+        type: Boolean,
+        default: false
       }
     },
     data () {
@@ -48,9 +52,14 @@
     computed: {
       wrapStyle () {
         const style = {}
-        if (this.scrollbarWidth && this.prefix.lowercase !== 'webkit') {
+        if (this.scrollbarWidth) {
           style.marginRight = style.marginBottom = `-${this.scrollbarWidth}px`
-          style.height = this.oriHeight && `${this.oriHeight}px` || `${this.prefix.css}calc(100% + ${this.scrollbarWidth}px)`
+          style.height = this.oriHeight && `${this.oriHeight}px`
+          if (!style.height) {
+            const calc = `calc(100% + ${this.scrollbarWidth}px)`
+            style.height = `${this.prefix.css}${calc}`
+            style.height = calc
+          }
         }
         return style
       }
@@ -73,10 +82,10 @@
       }
     },
     mounted () {
-      this.$refs.scrollContent && resizeEvent.addResizeListener(this.$refs.scrollContent, this.updateScrollbar)
+      !this.noresize && this.$refs.scrollContent && resizeEvent.addResizeListener(this.$refs.scrollContent, this.updateScrollbar)
     },
     beforeDestroy () {
-      this.$refs.scrollContent && resizeEvent.removeResizeListener(this.$refs.scrollContent, this.updateScrollbar)
+      !this.noresize && this.$refs.scrollContent && resizeEvent.removeResizeListener(this.$refs.scrollContent, this.updateScrollbar)
     }
   }
 </script>
@@ -105,7 +114,7 @@
   overflow: scroll;
 }
 .zp-scroller-hidden-default::-webkit-scrollbar {
-  width: 0;
-  height: 0;
+  /* width: 0;
+  height: 0; */
 }
 </style>

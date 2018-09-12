@@ -618,8 +618,7 @@
           })
         }
         if (this.scrollbar) {
-          const curHeight = this.tableOption.height - this.headWrapper.offsetHeight + this.scrollbarWidth
-          this.$refs.tableBodyWrapper.curHeight = isNaN(curHeight) ? null : curHeight
+          this.curHeight = (this.tableOption.height || this.$refs.tableBodyWrapper.$el.getBoundingClientRect().height) - this.headWrapper.offsetHeight + this.scrollbarWidth
           this.$refs.tableBodyWrapper.updateScrollbar()
         }
       // force && this.updateLayout()
@@ -685,7 +684,7 @@
     width: 100%;
   }
   .zp-table-body-wrapper {
-    overflow: auto;
+    /* overflow: auto; */
     position: relative;
     min-height: 40px;
   }

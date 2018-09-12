@@ -615,6 +615,7 @@
   }
   .zp-calendar .zp-calendar-week,
   .zp-calendar .zp-calendar-day {
+    width: 14%;
     width: -webkit-calc(100% / 7);
     width: -moz-calc(100% / 7);
     width: calc(100% / 7);
@@ -625,9 +626,7 @@
   }
   .zp-calendar .zp-calendar-year,
   .zp-calendar .zp-calendar-month {
-    width: -webkit-calc(100% / 4);
-    width: -moz-calc(100% / 4);
-    width: calc(100% / 4);
+    width: 25%;
     padding-top: 20px;
     padding-bottom: 20px;
     font-size: 14px;

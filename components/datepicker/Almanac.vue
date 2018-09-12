@@ -472,9 +472,7 @@
   }
   .zp-almanac .zp-almanac-year,
   .zp-almanac .zp-almanac-month {
-    width: -webkit-calc(100% / 4);
-    width: -moz-calc(100% / 4);
-    width: calc(100% / 4);
+    width: 25%;
   }
   .zp-almanac .zp-almanac-day span {
     display: block;

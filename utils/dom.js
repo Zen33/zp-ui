@@ -12,7 +12,7 @@ const reverse = str => {
 	})
 }
 
-export const domStyle = (el, props, val) => {
+export const domStyle = (el, props, val, pseudo) => {
   if (!el || !props) {
     return
   }
@@ -40,5 +40,5 @@ export const domStyle = (el, props, val) => {
     el.style[reverse(props === 'float' ? 'cssFloat' : props)] = val || ''
     return val
   }
-  return context.getComputedStyle(el, null).getPropertyValue(kebabCase(props === 'cssFloat' ? 'float' : props))
+  return context.getComputedStyle(el, pseudo || null).getPropertyValue(kebabCase(props === 'cssFloat' ? 'float' : props))
 }

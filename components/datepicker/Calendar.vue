@@ -162,7 +162,7 @@
         return curDecade
       },
       visible () {
-        if (this.$parent.$options.name === 'zp-date-picker') {
+        if (['zp-date-picker', 'zp-date-time-picker'].indexOf(this.$parent.$options.name) > -1) {
           return this.$parent.expand
         } else if (this.$parent.$options.name === 'zp-date-range') {
           return this.$parent.$parent.expand

@@ -41,6 +41,13 @@ export const formatDate = (date, format = DEFAULT_FORMAT) => {
   }
 }
 
+export const formatDateTime = (date, format = DEFAULT_FORMAT) => {
+  date = toDate(date)
+  if (date) {
+    return dateUtil.format(date, format, i18nProps())
+  }
+}
+
 const extractDateFormat = format => {
   return format.replace(/\W?m{1,2}|\W?ZZ/g, '').replace(/\W?h{1,2}|\W?s{1,3}|\W?a/gi, '').trim()
 }

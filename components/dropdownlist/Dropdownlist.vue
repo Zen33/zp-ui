@@ -101,7 +101,7 @@
       adjustScroller (id) {
         const scroller = id ? this.subItems[id].$refs[`zpScroller${id}`] : this.$refs.zpScroller
         const $el = scroller.$el
-        if ($el.offsetHeight > this.maxHeight) {
+        if ($el.offsetHeight >= this.maxHeight) {
           $el.classList.add('zp-ddl-scroller')
         } else {
           if ($el.classList.contains('zp-ddl-scroller')) {

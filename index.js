@@ -31,7 +31,10 @@ import Tree from './components/tree/'
 import Tag from './components/tag/'
 import { Tabs, TabPane } from './components/tabs/'
 import { DatePicker, Calendar, AlmanacPicker } from './components/datepicker/'
+import TimePicker from './components/timepicker/'
 import DateTimePicker from './components/datetimepicker/'
+import Picker from './components/picker/'
+import { Sensor, SensorDirective } from './components/sensor/'
 
 const components = [
   Collapse,
@@ -69,7 +72,9 @@ const components = [
   DatePicker,
   Calendar,
   AlmanacPicker,
-  DateTimePicker
+  TimePicker,
+  DateTimePicker,
+  Picker
 ]
 
 const install = Vue => {
@@ -77,6 +82,7 @@ const install = Vue => {
     Vue.component(component.name, component)
   })
   Vue.directive(Watermark.name, WatermarkDirective)
+  Vue.directive(Sensor.name, SensorDirective)
   Vue.directive(Loader.name, LoaderDirective)
   
   Vue.prototype.$alert = DialogBox.alert
@@ -111,6 +117,7 @@ export {
   Dialog,
   DialogBox,
   Watermark,
+  Sensor,
   Slider,
   Tooltip,
   Popover,
@@ -133,5 +140,7 @@ export {
   DatePicker,
   Calendar,
   AlmanacPicker,
-  DateTimePicker
+  TimePicker,
+  DateTimePicker,
+  Picker
 }

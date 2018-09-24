@@ -1,11 +1,12 @@
 export default {
-  computed: {
-    scrollbarWidth () {
+  methods: {
+    getScrollbarWidth (classes = '') {
       let outer = document.createElement('div')
       outer.style.visibility = 'hidden'
       outer.style.width = '100px'
       outer.style.msOverflowStyle = 'scrollbar'
       outer.style.top = '-9999px'
+      outer.className = classes
       document.body.appendChild(outer)
       const widthNoScroll = outer.offsetWidth
       outer.style.overflow = 'scroll'

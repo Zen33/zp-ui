@@ -3,7 +3,7 @@
   <div class="zp-scroller">
     <slot v-if="nativeBar">
     </slot>
-    <div v-else :class="['zp-scroller-wrap', {'zp-scroller-hidden-default': prefix.lowercase === 'webkit' }]" :style="wrapStyle" @scroll="handleScrollbar" ref="scrollerWrap">
+    <div v-else class="zp-scroller-wrap zp-scroller-hidden-default" :style="wrapStyle" @scroll="handleScrollbar" ref="scrollerWrap">
       <div class="zp-scroller-content" ref="scrollContent">
         <slot></slot>
       </div>
@@ -16,12 +16,11 @@
 <script>
   import Scrollbar from './Scrollbar.vue'
   import ScrollbarWidth from '../../mixins/scrollbarWidth'
-  import Prefix from '../../mixins/prefix'
   import resizeEvent from '../../utils/resize'
 
   export default {
     name: 'zp-scroller',
-    mixins: [ScrollbarWidth, Prefix],
+    mixins: [ScrollbarWidth],
     props: {
       oriHeight: {
         type: [Number, String],
@@ -52,15 +51,13 @@
     computed: {
       wrapStyle () {
         const style = {}
-        if (this.scrollbarWidth) {
-          style.marginRight = style.marginBottom = `-${this.scrollbarWidth}px`
-          style.height = this.oriHeight && `${this.oriHeight}px`
-          if (!style.height) {
-            const calc = `calc(100% + ${this.scrollbarWidth}px)`
-            style.height = `${this.prefix.css}${calc}`
-            style.height = calc
-          }
+        const scrollBarWidth = this.getScrollbarWidth('zp-scroller-hidden-default')
+        style.height = this.oriHeight && `${this.oriHeight}px`
+        if (scrollBarWidth) {
+          style.marginRight = style.marginBottom = `-${scrollBarWidth}px`
+          style.height = `calc(100% + ${scrollBarWidth}px)`
         }
+        !style.height && (style.height = '100%')
         return style
       }
     },
@@ -114,7 +111,7 @@
   overflow: scroll;
 }
 .zp-scroller-hidden-default::-webkit-scrollbar {
-  /* width: 0;
-  height: 0; */
+  width: 0;
+  height: 0;
 }
 </style>

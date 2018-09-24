@@ -54,7 +54,7 @@
         default: '' // '': none; 'a': am/pm; 'A': AM/PM
       },
       width: {
-        default: 400
+        default: 430
       },
       value: Date,
       placeholder: String,
@@ -378,7 +378,7 @@
   .zp-dtp-date,
   .zp-dtp-time {
     display: inline-block;
-    width: 79%;
+    width: 70%;
     vertical-align: top;
   }
   .zp-dtp-time {
@@ -388,7 +388,7 @@
     -webkit-transform: translateY(-50%);
     -o-transform: translateY(-50%);
     transform: translateY(-50%);
-    width: 20%;
+    width: 30%;
   }
   .zp-dtp-time .zp-time-nonsec {
     height: 230px;
@@ -401,7 +401,7 @@
     height: 120px;
   }
   .zp-dtp-items {
-    background: rgba(243, 243, 243, .9);
+    background: rgba(245, 245, 245, .9);
   }
   .zp-dtp-date {
     background: #fff;

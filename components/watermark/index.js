@@ -1,20 +1,26 @@
+import { domStyle } from '../../utils/dom'
+
 const WatermarkDirective = {
-  inserted (el, binding, vnode) {
-    const styles = window.getComputedStyle(el, null)
+  inserted (el, binding) {
+    // const styles = window.getComputedStyle(el, null)
+    // const params = {
+    //   width: parseInt(styles.getPropertyValue('width'), 10),
+    //   height: parseInt(styles.getPropertyValue('height'), 10)
+    // }
     const params = {
-      width: parseInt(styles.getPropertyValue('width'), 10),
-      height: parseInt(styles.getPropertyValue('height'), 10)
+      width: parseInt(domStyle(el, 'width'), 10),
+      height: parseInt(domStyle(el, 'height'), 10)
     }
-    const times = 5
-    const leeway = 150
-    const unit = Math.ceil(params.width / times)
+    const TIMES = 5
+    const LEEWAY = 150
+    const unit = Math.ceil(params.width / TIMES)
     let gap = []
     let wmContent = Array.isArray(binding.value) ? binding.value : binding.value !== undefined ? [binding.value] : ['zhaopin.com']
-    for (let i = 0; i < times; i += 1) {
+    for (let i = 0; i < TIMES; i += 1) {
       gap[i] = unit * i
     }
     (gapLen => {
-      const columns = Math.ceil(params.height / leeway)
+      const columns = Math.ceil(params.height / LEEWAY)
       let htmlString = ''
       let flag = 0
       const cssText = `
@@ -34,7 +40,7 @@ const WatermarkDirective = {
       `
       for (let i = 0; i < columns; i += 1) {
         for (let wm of wmContent) {
-          htmlString += `<div style="${cssText}left:${gap[flag]}px;top:${leeway * i}px;">${wm}</div>`
+          htmlString += `<div style="${cssText}left:${gap[flag]}px;top:${LEEWAY * i}px;">${wm}</div>`
           flag = (flag >= gapLen - 1) ? 0 : flag + 1
         }
       }
